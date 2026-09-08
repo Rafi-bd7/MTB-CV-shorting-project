@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+
+# Production / Electron builds
+release/
+release_build/
+dist/
+build/
+frontend/
+
+# Logs & Temp files
+logs/
+*.log
+tmp_extract/
+
+# Environment
+.env
+.env.local
+
+# Operating System & IDE
+.DS_Store
+Thumbs.db
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Scratch & Test Scripts
+test_*.js
+extracted_demo_text.txt
+
+# External Reference & PDF files
+*.pdf
+
+# Report folder (local only)
+report/

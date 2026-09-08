@@ -1,0 +1,46 @@
+{
+  "name": "mtb-sortify",
+  "version": "2.0.1",
+  "description": "MTB CV Sorting Tool – AI Powered Desktop App",
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "com.mtb.sortify",
+    "productName": "MTB Sortify",
+    "icon": "assets/icon.png",
+    "directories": {
+      "output": "C:/Users/DFIT/Downloads/MTB_Sortify_Setup"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*"
+    ]
+  },
+  "dependencies": {
+    "@xenova/transformers": "^2.17.2",
+    "log4js": "^6.9.1",
+    "mammoth": "^1.8.0",
+    "openai": "^4.73.0",
+    "pdf-parse": "^1.1.1",
+    "tesseract.js": "^5.1.1",
+    "uuid": "^11.1.0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "electron": "^42.4.1",
+    "electron-builder": "^26.15.3"
+  }
+}

@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MTB Sortify — AI Recruitment Intelligence</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+
+<!-- ═══ GLOBAL GLOSSY BACKGROUND ════════════════════════════════════ -->
+<div class="mtb-glossy-bg">
+    <div class="mtb-glow blob-1"></div>
+    <div class="mtb-glow blob-2"></div>
+    <div class="mtb-glow blob-3"></div>
+    <div class="mtb-logo-watermark"></div>
+    <div class="glossy-overlay"></div>
+</div>
+
+<!-- ═══ CUSTOM TITLE BAR ════════════════════════════════════════════ -->
+<div class="title-bar" id="title-bar">
+    <div class="title-bar-left">
+        <div class="title-bar-logo">
+            <img src="assets/image.png" alt="MTB" style="height: 22px; width: auto; margin-right: 6px; mix-blend-mode: multiply;">
+            <span>MTB Sortify</span>
+        </div>
+    </div>
+    <div class="title-bar-drag"></div>
+    <div class="title-bar-controls">
+        <button class="tb-btn" id="btn-minimize"><i class="fa-solid fa-minus"></i></button>
+        <button class="tb-btn" id="btn-maximize"><i class="fa-solid fa-square"></i></button>
+        <button class="tb-btn close" id="btn-close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+</div>
+
+<!-- ═══ APP SHELL ═══════════════════════════════════════════════════ -->
+<div class="app-shell">
+
+    <!-- ── SIDEBAR ──────────────────────────────────────────────── -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-profile">
+            <div class="profile-avatar">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div class="profile-info">
+                <span class="profile-name">Admin</span>
+                
+            </div>
+        </div>
+
+        <nav class="nav-menu">
+            <div class="nav-section-label">MAIN</div>
+            <a href="#" class="nav-item active" data-section="dashboard" id="nav-dashboard">
+                <div class="nav-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+                <span>Rank & Match</span>
+                <div class="nav-indicator"></div>
+            </a>
+            <a href="#" class="nav-item" data-section="job-fit-analyzer" id="nav-job-fit-analyzer">
+                <div class="nav-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+                <span>Job Fit Analyzer</span>
+                <div class="nav-indicator"></div>
+            </a>
+            <a href="#" class="nav-item" data-section="single-cv" id="nav-single-cv">
+                <div class="nav-icon"><i class="fa-solid fa-file-shield"></i></div>
+                <span>Single CV Match</span>
+                <div class="nav-indicator"></div>
+            </a>
+            
+            <div class="nav-section-label" style="margin-top:1.5rem;">TOOLS</div>
+            <a href="#" class="nav-item" data-section="settings" id="nav-settings">
+                <div class="nav-icon"><i class="fa-solid fa-sliders"></i></div>
+                <span>Settings</span>
+                <div class="nav-indicator"></div>
+            </a>
+            <a href="#" class="nav-item" data-section="help-support" id="nav-help-support">
+                <div class="nav-icon"><i class="fa-solid fa-circle-question"></i></div>
+                <span>Help & Support</span>
+                <div class="nav-indicator"></div>
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="engine-status">
+                <div class="status-pulse" id="status-dot"></div>
+                <div class="status-text">
+                    <span>Engine</span>
+                    <strong id="backend-status">Ready</strong>
+                </div>
+            </div>
+            <div class="db-counter">
+                <i class="fa-solid fa-database"></i>
+                <span><strong id="total-cvs">0</strong> indexed</span>
+            </div>
+            <button class="theme-switch" id="theme-toggle">
+                <i class="fa-solid fa-moon" id="theme-icon"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- ── MAIN CONTENT ─────────────────────────────────────────── -->
+    <main class="main-content" id="main-content">
+
+        <!-- ══ DASHBOARD ════════════════════════════════════════ -->
+        <section id="section-dashboard" class="page-section active">
+            <!-- Hero Header -->
+            <div class="page-hero">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        <span class="gradient-text">MTB Sortify </span>Recruitment
+                    </h1>
+                    <p class="hero-subtitle">Upload resumes. AI ranks the best fit. Send interview invites instantly.</p>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-pill">
+                        <i class="fa-solid fa-users"></i>
+                        <span id="hero-total">0</span>
+                        <label>Candidates</label>
+                    </div>
+                    <div class="stat-pill accent">
+                        <i class="fa-solid fa-bolt"></i>
+                        <span>Ready</span>
+                        <label>Engine</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Zone -->
+            <div class="upload-zone" id="drop-zone">
+                <div class="upload-zone-bg">
+                    <div class="upload-ring ring-1"></div>
+                    <div class="upload-ring ring-2"></div>
+                    <div class="upload-ring ring-3"></div>
+                </div>
+                <div class="upload-zone-content">
+                    <div class="upload-icon-wrap">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                    </div>
+                    <h2>Drop CV Files Here</h2>
+                    <p>PDF, DOCX, DOC, JPG — duplicates skipped automatically</p>
+                    <input type="file" id="file-input" multiple accept=".pdf,.docx,.doc,.txt,.jpg,.jpeg,.png" style="display:none;">
+                    <button class="btn-glow" id="btn-browse" onclick="document.getElementById('file-input').click()">
+                        <i class="fa-solid fa-folder-open"></i> Browse Files
+                    </button>
+                </div>
+            </div>
+
+            <!-- Progress -->
+            <div class="progress-panel" id="progress-area" style="display:none;">
+                <div class="progress-header">
+                    <div class="scanner-icon">
+                        <i class="fa-regular fa-file-lines"></i>
+                        <div class="scanner-line"></div>
+                    </div>
+                    <h3>Scanning & Analyzing CVs…</h3>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progress-bar"></div>
+                </div>
+                <p class="progress-text" id="progress-text">0 / 0 completed</p>
+                <ul class="progress-log" id="upload-log"></ul>
+            </div>
+
+            <!-- Search Card -->
+            <div class="search-panel">
+                <div class="search-panel-header">
+                    <h2><i class="fa-solid fa-magnifying-glass-chart"></i> Smart Search & Rank</h2>
+                    <div class="mode-toggle">
+                        <button class="mode-btn active" id="mode-quick">
+                            <i class="fa-solid fa-bolt"></i> Quick
+                        </button>
+                        <button class="mode-btn" id="mode-ai">
+                            <i class="fa-solid fa-brain"></i> AI
+                            <span class="ai-chip">GPT</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="search-body">
+                    <div class="input-group">
+                        <label for="job-spec">Job Specification / Search Query</label>
+                        <textarea id="job-spec" rows="3" placeholder="e.g. Senior AI Engineer with 5+ years Python, Machine Learning, NLP and MBA…"></textarea>
+                    </div>
+                    <div class="search-actions">
+                        <div class="input-group compact" style="flex:2;">
+                            <label>Search Specific Files (Check to select, leave empty for all)</label>
+                            <div id="file-filter-container" style="background:var(--bg-lighter); color:var(--text-color); border:1px solid var(--border-light); padding:0.5rem; border-radius:0.5rem; width:100%; height:100px; overflow-y:auto; font-family:inherit; scrollbar-width: thin; scrollbar-color: var(--accent) var(--bg-dark); display:flex; flex-direction:column; gap:0.4rem;">
+                                <!-- Checkboxes populated dynamically -->
+                            </div>
+                        </div>
+                        <div class="input-group compact" style="flex:1;">
+                            <label for="top-k">Top Results</label>
+                            <input type="number" id="top-k" value="10" min="1" max="500">
+                        </div>
+                        <button class="btn-glow large" id="btn-search" style="align-self: flex-end;">
+                            <i class="fa-solid fa-rocket"></i> Search & Rank
+                        </button>
+                    </div>
+                    <p class="search-hint" id="search-mode-hint">⚡ Quick Rank: free, instant local keyword matching</p>
+                </div>
+            </div>
+
+            <!-- Loading -->
+            <div id="search-loading" class="loading-overlay" style="display:none;">
+                <div class="loader-cube">
+                    <div class="cube-face front"></div>
+                    <div class="cube-face back"></div>
+                    <div class="cube-face left"></div>
+                    <div class="cube-face right"></div>
+                    <div class="cube-face top"></div>
+                    <div class="cube-face bottom"></div>
+                </div>
+                <p id="loading-msg">Analyzing candidates…</p>
+                <button id="btn-cancel-search" class="btn-outline small" style="margin-top: 1.5rem; border-color: var(--danger); color: var(--danger);"><i class="fa-solid fa-xmark"></i> Cancel Search</button>
+            </div>
+
+            <!-- Results -->
+            <div id="results-area" style="display:none;">
+                <div class="results-toolbar">
+                    <h2><i class="fa-solid fa-trophy" style="color:#f59e0b;"></i> Top Ranked Candidates</h2>
+                    <div class="toolbar-actions">
+                        <span id="results-count" class="results-count-badge"></span>
+                        <button id="btn-download-pdf" class="btn-outline">
+                            <i class="fa-solid fa-file-pdf"></i> PDF
+                        </button>
+                        <button id="btn-shortlist-email" class="btn-glow small" style="display:none;">
+                            <i class="fa-solid fa-envelope"></i> Draft Emails
+                        </button>
+                    </div>
+                </div>
+                <div id="results-cards" class="results-grid"></div>
+            </div>
+
+            <!-- ══ CANDIDATES DATABASE (Moved inside Rank & Match) ═══════════════════════════════════════ -->
+            <div class="page-hero compact" style="margin-top: 3rem;">
+                <div class="hero-text">
+                    <h1 class="hero-title"><span class="gradient-text">Candidates</span> Database</h1>
+                    <p class="hero-subtitle">All indexed files and candidates</p>
+                </div>
+                <div class="toolbar-actions">
+                    <select id="candidate-filter" class="select-modern">
+                        <option value="all">All Formats</option>
+                        <option value="pdf">PDF</option>
+                        <option value="doc">DOC / DOCX</option>
+                        <option value="img">Images</option>
+                    </select>
+                    <button id="btn-clear-db" class="btn-danger">
+                        <i class="fa-solid fa-trash-can"></i> Delete All
+                    </button>
+                </div>
+            </div>
+            <div class="data-table-wrap">
+                <table class="data-table" id="candidates-table">
+                    <thead>
+                        <tr>
+                            <th>File Name</th>
+                            <th>Candidates</th>
+                            <th>Hash ID</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ══ SINGLE CV MATCH ════════════════════════════════════════ -->
+        <section id="section-single-cv" class="page-section">
+            <div class="page-hero compact">
+                <div class="hero-text">
+                    <h1 class="hero-title"><span class="gradient-text">Single CV</span> Matcher</h1>
+                    <p class="hero-subtitle">Upload a single CV and evaluate against specific requirements.</p>
+                </div>
+            </div>
+
+            <div class="search-panel">
+                <div class="search-panel-header">
+                    <h2><i class="fa-solid fa-file-shield"></i> Evaluate Candidate</h2>
+                    <div class="mode-toggle">
+                        <button class="mode-btn" id="single-mode-quick">
+                            <i class="fa-solid fa-bolt"></i> Quick Search
+                        </button>
+                        <button class="mode-btn active" id="single-mode-ai">
+                            <i class="fa-solid fa-brain"></i> AI Search
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="search-body">
+                    <!-- CV Upload Box -->
+                    <div class="upload-zone compact-zone" id="single-cv-drop-zone" style="margin-bottom: 1.25rem; min-height: 120px; padding: 1.5rem;">
+                        <div class="upload-zone-content">
+                            <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2rem; color: var(--accent); margin-bottom: 0.5rem;"></i>
+                            <h3 style="font-size: 1.2rem; margin:0;">Upload Candidate CV(s)</h3>
+                            <p style="font-size: 0.9rem; margin-top: 0.2rem;">PDF, DOCX, DOC, JPG, PNG (Select one or multiple)</p>
+                            <input type="file" id="single-cv-file" accept=".pdf,.docx,.doc,.txt,.jpg,.jpeg,.png" multiple style="display:none;">
+                            <button class="btn-outline small" style="margin-top: 0.5rem;" onclick="document.getElementById('single-cv-file').click()">Select File(s)</button>
+                            <div id="single-cv-filename" style="margin-top: 0.5rem; font-weight: bold; color: var(--accent);"></div>
+                        </div>
+                    </div>
+
+                    <!-- Multi-CV Selection List -->
+                    <div id="single-cv-files-container" class="cv-uploaded-list" style="display:none; margin-bottom: 1.25rem;"></div>
+
+                    <div class="input-group">
+                        <label for="single-job-spec">Requirements / Ideal Candidate Description <span style="font-size:0.8rem; font-weight:normal; color:var(--text-muted);">(Press Enter to Evaluate)</span></label>
+                        <textarea id="single-job-spec" rows="4" placeholder="e.g. Needs to have Bachelor's in CS / Banking, 5+ years of experience in React, Node.js, and excellent communication skills..."></textarea>
+                    </div>
+                    
+                    <div class="search-actions" style="justify-content: flex-end;">
+                        <button class="btn-glow large" id="btn-single-match">
+                            <i class="fa-solid fa-bullseye"></i> Evaluate Match
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Single CV Result Area -->
+            <div id="single-cv-result" style="display:none; margin-top: 2rem;">
+                <div class="analytics-card full-width">
+                    <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-light); padding-bottom: 1rem; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+                        <div style="display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;">
+                            <h3 style="margin: 0;"><i class="fa-solid fa-chart-pie"></i> Match Results</h3>
+                            <div id="single-star-rating-box" class="rating-verdict-box" style="display: none;"></div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;">
+                            <div id="single-token-burn-corner" style="display: none;"></div>
+                            <div class="match-score-circle" id="single-match-score">0%</div>
+                        </div>
+                    </div>
+                    <div id="single-match-details" style="line-height: 1.6; color: var(--text-color);">
+                        <!-- AI or Quick Match explanation will go here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Loading -->
+            <div id="single-loading" class="loading-overlay" style="display:none; position: relative; min-height: 200px; background: transparent;">
+                <div class="loader-cube" style="margin: 2rem auto;">
+                    <div class="cube-face front"></div><div class="cube-face back"></div><div class="cube-face left"></div><div class="cube-face right"></div><div class="cube-face top"></div><div class="cube-face bottom"></div>
+                </div>
+                <p id="single-loading-msg" style="text-align: center;">Analyzing CV...</p>
+                <div style="text-align: center; margin-top: 1.25rem;">
+                    <button id="btn-cancel-single-match" class="btn-outline small" style="border-color: var(--danger); color: var(--danger);">
+                        <i class="fa-solid fa-xmark"></i> Cancel Evaluation
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══ JOB FIT ANALYZER ═══════════════════════════════════ -->
+        <section id="section-job-fit-analyzer" class="page-section">
+            <div class="page-hero compact">
+                <div class="hero-text">
+                    <h1 class="hero-title"><span class="gradient-text">Job Fit</span> Analyzer</h1>
+                    <p class="hero-subtitle">Upload multiple CVs and let AI find the perfect match for your JD</p>
+                </div>
+            </div>
+            <div class="search-panel">
+                <div class="search-panel-header">
+                    <h2><i class="fa-solid fa-brain"></i> AI Match Analyzer</h2>
+                    <div class="mode-toggle">
+                        <button class="mode-btn" id="job-fit-mode-ai">
+                            <i class="fa-solid fa-cloud"></i> AI Search
+                        </button>
+                        <button class="mode-btn active" id="job-fit-mode-quick">
+                            <i class="fa-solid fa-microchip"></i> Local Search
+                        </button>
+                    </div>
+                </div>
+                <div class="search-body">
+                    <div class="upload-zone compact-zone" id="job-fit-drop-zone" style="margin-bottom: 1.25rem; min-height: 120px; padding: 1.5rem;">
+                        <div class="upload-zone-content">
+                            <i class="fa-solid fa-file-circle-plus" style="font-size: 2rem; color: var(--accent); margin-bottom: 0.5rem;"></i>
+                            <h3 style="font-size: 1.2rem; margin:0;">Upload CVs (1-100)</h3>
+                            <p style="font-size: 0.9rem; margin-top: 0.2rem;">PDF, DOCX, Excel, Images (Select multiple)</p>
+                            <input type="file" id="job-fit-files" accept=".pdf,.docx,.doc,.xlsx,.xls,.csv,.jpg,.jpeg,.png" multiple style="display:none;">
+                            <button class="btn-outline small" style="margin-top: 0.5rem;" onclick="document.getElementById('job-fit-files').click()">Select CVs</button>
+                        </div>
+                    </div>
+                    
+                    <div id="job-fit-selected-files" class="cv-uploaded-list" style="display:none; margin-bottom: 1.25rem; max-height: 150px; overflow-y: auto;"></div>
+
+                    <div class="input-group">
+                        <label for="job-fit-jd">Job Description (JD)</label>
+                        <textarea id="job-fit-jd" rows="5" placeholder="Paste the job description here... AI will analyze the uploaded CVs to find who matches this best."></textarea>
+                    </div>
+                    <p class="search-hint" id="job-fit-mode-hint" style="text-align: right; margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">🖥️ <strong>Local AI:</strong> Uses Ollama (phi3) running on your PC. 100% Free (0 Tokens).</p>
+                    <div class="search-actions" style="justify-content: flex-end; margin-top: 1rem;">
+                        <button class="btn-glow large" id="btn-job-fit-analyze">
+                            <i class="fa-solid fa-magnifying-glass-chart"></i> Start Analysis
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="job-fit-loading" class="loading-overlay" style="display:none; position: relative; min-height: 200px; background: transparent;">
+                <div class="loader-cube" style="margin: 2rem auto;">
+                    <div class="cube-face front"></div><div class="cube-face back"></div><div class="cube-face left"></div><div class="cube-face right"></div><div class="cube-face top"></div><div class="cube-face bottom"></div>
+                </div>
+                <p id="job-fit-loading-msg" style="text-align: center;">Extracting Data and AI matching...</p>
+                <div style="text-align: center; margin-top: 1.25rem;">
+                    <button id="btn-cancel-job-fit" class="btn-outline small" style="border-color: var(--danger); color: var(--danger);">
+                        <i class="fa-solid fa-xmark"></i> Cancel
+                    </button>
+                </div>
+            </div>
+
+            <div id="job-fit-results-area" style="display:none; margin-top: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h2 style="margin: 0;"><i class="fa-solid fa-trophy" style="color:#f59e0b;"></i> Best Matches Ranked</h2>
+                    <span id="job-fit-tokens-burned" style="font-size: 0.85rem; color: var(--warning); background: rgba(245, 158, 11, 0.1); padding: 4px 12px; border-radius: 12px; border: 1px solid rgba(245, 158, 11, 0.3); font-weight: 600;">
+                        <i class="fa-solid fa-fire"></i> 0 Tokens
+                    </span>
+                </div>
+                <div id="job-fit-results-list" class="results-grid" style="grid-template-columns: 1fr;"></div>
+            </div>
+        </section>
+
+        <!-- ══ ANALYTICS ════════════════════════════════════════ -->
+        <section id="section-analytics" class="page-section">
+            <div class="page-hero compact">
+                <div class="hero-text">
+                    <h1 class="hero-title"><span class="gradient-text">Analytics</span> & Insights</h1>
+                    <p class="hero-subtitle">Database statistics and keyword ranking</p>
+                </div>
+            </div>
+            <div class="analytics-grid">
+                <div class="analytics-card chart-card">
+                    <h3>Format Breakdown</h3>
+                    <canvas id="formatChart"></canvas>
+                </div>
+                <div class="analytics-card stat-card">
+                    <h3>Total Indexed</h3>
+                    <div class="big-number" id="stat-total">0</div>
+                    <span class="stat-label">candidates</span>
+                </div>
+            </div>
+            <div class="analytics-card full-width">
+                <h3><i class="fa-solid fa-chart-bar"></i> Keyword Analyzer</h3>
+                <div class="analyzer-form">
+                    <div class="input-group">
+                        <label for="analytics-keyword">Skill / Keyword</label>
+                        <input type="text" id="analytics-keyword" placeholder="e.g. Python, MBA, React…">
+                    </div>
+                    <div class="input-group compact">
+                        <label for="analytics-top-k">Top N</label>
+                        <input type="number" id="analytics-top-k" value="10" min="1" max="500">
+                    </div>
+                    <button class="btn-glow" id="btn-analyze-keyword">
+                        <i class="fa-solid fa-chart-bar"></i> Analyze
+                    </button>
+                </div>
+                <div id="analytics-results" style="display:none; margin-top:2rem;">
+                    <div class="analytics-results-grid">
+                        <div class="analytics-results-table">
+                            <h4>Top Candidates</h4>
+                            <div class="data-table-wrap">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr><th>Rank</th><th>Candidate</th><th>Source</th><th>Match%</th><th>Action</th></tr>
+                                    </thead>
+                                    <tbody id="analytics-table-body"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="analytics-chart-wrap">
+                            <h4>Score Distribution</h4>
+                            <canvas id="scoreChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══ REPORTS ══════════════════════════════════════════ -->
+        <section id="section-reports" class="page-section">
+            <div class="page-hero compact">
+                <div class="hero-text">
+                    <h1 class="hero-title"><span class="gradient-text">Reports</span></h1>
+                    <p class="hero-subtitle">System Analytics & Activity Log Files</p>
+                </div>
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                    <button class="btn-glow" id="btn-reports-open-log-file"><i class="fa-solid fa-file-code"></i> Open Activity Log File</button>
+                    <button class="btn-outline" id="btn-reports-open-log-folder"><i class="fa-solid fa-folder-open"></i> Open Log Folder</button>
+                    <button class="btn-outline" onclick="loadReportsData()"><i class="fa-solid fa-arrows-rotate"></i> Refresh</button>
+                </div>
+            </div>
+
+            <!-- Mini Dashboard -->
+            <div class="analytics-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 2rem;">
+                <div class="analytics-card stat-card" style="padding: 1.5rem;">
+                    <div class="big-number" id="report-total-uploads">0</div>
+                    <div class="stat-label">Total Uploads</div>
+                </div>
+                <div class="analytics-card stat-card" style="padding: 1.5rem;">
+                    <div class="big-number" id="report-total-searches">0</div>
+                    <div class="stat-label">AI Searches</div>
+                </div>
+                <div class="analytics-card stat-card" style="padding: 1.5rem; border-color: rgba(239, 68, 68, 0.3);">
+                    <div class="big-number" id="report-total-errors" style="background: var(--danger); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">0</div>
+                    <div class="stat-label">System Errors</div>
+                </div>
+            </div>
+
+            <div class="analytics-card full-width">
+                <h3 style="margin-bottom: 1rem;"><i class="fa-solid fa-clock-rotate-left"></i> Detailed Search History</h3>
+                <div class="data-table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>Date & Time</th><th>Search Query</th><th>Top K Limit</th><th>Status</th></tr>
+                        </thead>
+                        <tbody id="reports-search-history-body">
+                            <tr><td colspan="4" style="text-align:center; color: var(--text-muted);">Loading search history...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══ SETTINGS ═════════════════════════════════════════ -->
+        <section id="section-settings" class="page-section">
+            <div class="page-hero compact">
+                <div class="hero-text">
+                    <h1 class="hero-title"><span class="gradient-text">Settings</span></h1>
+                    <p class="hero-subtitle">Application configuration & AI Integration</p>
+                </div>
+            </div>
+            <div class="settings-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+                
+                <!-- API Key Configuration -->
+                <div class="settings-card" style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 1rem; align-items: stretch;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div class="settings-card-icon" style="background: var(--accent); color: white;"><i class="fa-solid fa-key"></i></div>
+                        <div class="settings-card-info" style="flex: 1;">
+                            <label style="font-size: 1.1rem; color: var(--text-primary); font-weight: 600;">OpenAI API Key</label>
+                            <span style="font-size: 0.9rem; opacity: 0.8;">Required for Cloud AI features (Rank & Match AI, Job Fit, Single CV Match).</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <div style="position: relative; flex: 1; display: flex; align-items: center;">
+                            <input type="password" id="settings-api-key-input" class="search-input" placeholder="sk-proj-..." style="width: 100%; padding-right: 40px; font-family: monospace;">
+                            <button id="btn-toggle-api-key" style="position: absolute; right: 10px; background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 5px;">
+                                <i class="fa-solid fa-eye" id="icon-toggle-api-key"></i>
+                            </button>
+                        </div>
+                        <button id="btn-save-api-key" class="btn-glow" style="padding: 0.75rem 1.5rem; font-weight: bold; background: linear-gradient(135deg, var(--accent), #8b5cf6); border-radius: 8px; border: none;"><i class="fa-solid fa-cloud-arrow-up"></i> Save Key</button>
+                        <button id="btn-delete-api-key" class="btn-outline" style="border-color: #ef4444; color: #ef4444; padding: 0.75rem 1.25rem; border-radius: 8px; transition: all 0.3s; font-weight: bold;" onmouseover="this.style.background='#ef4444'; this.style.color='white'" onmouseout="this.style.background='transparent'; this.style.color='#ef4444'"><i class="fa-solid fa-trash-can"></i> Delete</button>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <div class="settings-card-icon"><i class="fa-solid fa-database"></i></div>
+                    <div class="settings-card-info">
+                        <label>Database Location</label>
+                        <span style="word-break: break-all; font-size: 0.85rem;">~/Documents/MTB_CV_Sorter_Data</span>
+                    </div>
+                </div>
+                <div class="settings-card">
+                    <div class="settings-card-icon" style="background: var(--accent); color: white;"><i class="fa-solid fa-scroll"></i></div>
+                    <div class="settings-card-info" style="flex:1;">
+                        <label>Activity Log Files (log4js)</label>
+                        <span style="font-size: 0.85rem; opacity: 0.8; display: block; margin-bottom: 0.4rem;">Logs all user actions into text/log files in software install folder & Documents.</span>
+                        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                            <button id="btn-open-log-folder" class="btn-outline small" style="cursor:pointer;"><i class="fa-solid fa-folder-open"></i> Open Log Folder</button>
+                            <button id="btn-open-log-file" class="btn-glow small" style="cursor:pointer;"><i class="fa-solid fa-file-code"></i> Open Activity Text Log</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="settings-card">
+                    <div class="settings-card-icon"><i class="fa-solid fa-microchip"></i></div>
+                    <div class="settings-card-info">
+                        <label>Search Engine</label>
+                        <span>Built-in Keyword & Vector Matching</span>
+                    </div>
+                </div>
+                <div class="settings-card">
+                    <div class="settings-card-icon"><i class="fa-solid fa-robot"></i></div>
+                    <div class="settings-card-info">
+                        <label>AI Engine</label>
+                        <span>OpenAI GPT (Requires Key) & Local Ollama</span>
+                    </div>
+                </div>
+                <div class="settings-card">
+                    <div class="settings-card-icon"><i class="fa-solid fa-file-zipper"></i></div>
+                    <div class="settings-card-info">
+                        <label>Supported Formats</label>
+                        <span>PDF, DOCX, DOC, TXT, JPG, PNG, XLSX</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══ HELP & SUPPORT (USER GUIDE) ═══════════════════════ -->
+        <section id="section-help-support" class="page-section">
+            <div class="page-hero compact">
+                <div class="guide-header-row" style="width: 100%;">
+                    <div class="hero-text">
+                        <h1 class="hero-title" id="guide-hero-title">
+                            <span class="gradient-text">Help & Support</span> · User Guide
+                        </h1>
+                        <p class="hero-subtitle" id="guide-hero-subtitle">
+                            Master every capability, algorithm, and operation of MTB Sortify.
+                        </p>
+                    </div>
+                    <!-- Language Toggle Switch (English Default / বাংলা) -->
+                    <div class="lang-switch-box">
+                        <span class="lang-text active" id="guide-lang-en-lbl">English</span>
+                        <label class="guide-toggle-switch">
+                            <input type="checkbox" id="guide-lang-toggle">
+                            <span class="guide-slider"></span>
+                        </label>
+                        <span class="lang-text" id="guide-lang-bn-lbl">বাংলা</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Executive User Manual & Purpose Banner (Rendered dynamically) -->
+            <div id="guide-manual-hero-container"></div>
+
+            <!-- Navigation & Search Filter Bar -->
+            <div class="guide-nav-bar">
+                <div class="guide-category-pills" id="guide-category-pills">
+                    <button class="guide-pill-btn active" data-cat="all">
+                        <i class="fa-solid fa-layer-group"></i> <span class="cat-label">All Functions</span>
+                    </button>
+                    <button class="guide-pill-btn" data-cat="batch">
+                        <i class="fa-solid fa-folder-tree"></i> <span class="cat-label">Batch CV Engine</span>
+                    </button>
+                    <button class="guide-pill-btn" data-cat="search">
+                        <i class="fa-solid fa-bolt"></i> <span class="cat-label">Search Modes</span>
+                    </button>
+                    <button class="guide-pill-btn" data-cat="single">
+                        <i class="fa-solid fa-file-shield"></i> <span class="cat-label">Single CV Match</span>
+                    </button>
+                    <button class="guide-pill-btn" data-cat="rating">
+                        <i class="fa-solid fa-star"></i> <span class="cat-label">5-Star Ratings</span>
+                    </button>
+                    <button class="guide-pill-btn" data-cat="export">
+                        <i class="fa-solid fa-file-pdf"></i> <span class="cat-label">Reports & Export</span>
+                    </button>
+                    <button class="guide-pill-btn" data-cat="tips">
+                        <i class="fa-solid fa-keyboard"></i> <span class="cat-label">Pro-Tips & Shortcuts</span>
+                    </button>
+                </div>
+                <div class="guide-search-wrapper">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="guide-search-input" class="guide-search-input" placeholder="Search guide topics / ফিচার খুঁজুন...">
+                </div>
+            </div>
+
+            <!-- Dynamic Guide Grid (Rendered by help_support.js) -->
+            <div class="guide-grid" id="guide-cards-container">
+                <!-- Injected dynamically based on language & filter -->
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<!-- ═══ CANDIDATE DETAIL MODAL ═══════════════════════════════════════ -->
+<div id="cv-modal" class="modal-backdrop">
+    <div class="modal-container">
+        <div class="modal-top-bar">
+            <h2 id="modal-title">Candidate Details</h2>
+            <div class="modal-top-actions">
+                <button id="btn-modal-summarize" class="btn-glow small">
+                    <i class="fa-solid fa-brain"></i> AI Summarize
+                </button>
+                <button id="btn-modal-email" class="btn-outline small">
+                    <i class="fa-solid fa-envelope"></i> Draft Email
+                </button>
+                <button id="modal-open-native" class="btn-outline small">
+                    <i class="fa-solid fa-folder-open"></i> Open File
+                </button>
+                <button id="modal-close" class="btn-icon">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+        <div class="modal-body" id="modal-body"></div>
+    </div>
+</div>
+
+<!-- ═══ EMAIL DRAFT MODAL ════════════════════════════════════════════ -->
+<div id="email-modal" class="modal-backdrop">
+    <div class="modal-container narrow">
+        <div class="modal-top-bar">
+            <h2><i class="fa-solid fa-envelope" style="color:var(--accent);"></i> Interview Email Drafts</h2>
+            <button id="email-modal-close" class="btn-icon"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="modal-body" id="email-modal-body" style="white-space:normal;"></div>
+    </div>
+</div>
+
+<script src="app.js"></script>
+<script src="single_cv.js"></script>
+<script src="help_support.js"></script>
+<script src="job_fit.js"></script>
+</body>
+</html>
